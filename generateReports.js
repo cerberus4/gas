@@ -6,14 +6,13 @@ function updateReport() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   var cell = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet().getActiveCell();
   
-
   var rowCount = 1;
   var lastRow = ss.getDataRange().getNumRows();
   var reportSheetName = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet().getName();
 
   while (rowCount <= lastRow) {
     //go to cell A1 and store value of cell   
-    sheet.getRange(rowCount, 1).activateAsCurrentCell();              
+    sheet.getRange(rowCount, 1).activateAsCurrentCell();  
     var cellValue = ss.getCurrentCell().getValue();                   
     //Determine if the cell value contains the word Domain Group:
     var dgTrue = cellValue.includes('Domain Group:');
@@ -53,12 +52,14 @@ function updateReport() {
           break;
         }
       }
-      if (dgTrue2 == true) {                                    //if second counter contains string 'Domain_Group'
+      //if second counter cell value contains the string 'Domain Group:' we are at the end of the group. 
+      if (dgTrue2 == true) {  
+        //declare ranges to copy from
         var toRow = rowCount2 -1;
-        var blankSheet = ss.getSheetByName('blank');                  //create copy of blank sheet
-        blankSheet.copyTo(ss).setName(sheetName);                         //paste blank sheet with new name
-        //getRange(row, column, numRows, numColumns)
         var numRows = toRow - fromRow + 1; 
+        //create copy of template sheet, create a new sheet and give it the name of variable sheetName
+        var blankSheet = ss.getSheetByName('blank');                  
+        blankSheet.copyTo(ss).setName(sheetName);        
         var sourceSheet = ss.getSheetByName(reportSheetName);
         var sourceRange = sourceSheet.getRange(fromRow, 1, numRows, 9);
         var targetSheet = ss.getSheetByName(sheetName);
